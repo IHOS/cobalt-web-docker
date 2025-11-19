@@ -15,7 +15,12 @@ RUN apk add --no-cache git
 
 # this totally fucks up the git repo but it breaks cobalt otherwise
 # https://github.com/imputnet/cobalt/blob/4b9644ebdfbfe7bc6f7ec2d476692e3619cb59bd/packages/version-info/index.js#L30
-RUN echo "0000000000000000000000000000000000000000 $(git rev-parse HEAD)" > .git/logs/HEAD
+
+# 创建一个假的git目录结构
+RUN mkdir -p .git/logs && \
+    echo "0000000000000000000000000000000000000000 refs/heads/main" > .git/logs/HEAD && \
+    echo "0000000000000000000000000000000000000000" > .git/HEAD && \
+    echo "ref: refs/heads/main" > .git/HEAD || true
 
 # don't need to install anything other than the web deps
 # (but we need the root folder for the workspace)
